@@ -188,14 +188,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &254299425
-AudioListener:
+--- !u!114 &254299425
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 254299424}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe53d79841b58c478c44ea0dcbc6286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 768257758}
 --- !u!20 &254299426
 Camera:
   m_ObjectHideFlags: 0
@@ -361,7 +366,7 @@ GameObject:
   - component: {fileID: 768257763}
   - component: {fileID: 768257764}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -437,7 +442,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 768257758}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.88, y: -2.72, z: -1.3367075}
+  m_LocalPosition: {x: -3.88, y: 2.04, z: -1.3367075}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -471,6 +476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2759f4840b91cba4ca3fba9b7507b6c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  horizontalMoveScaler: 7
+  jumpPower: 10
 --- !u!1 &1639817725
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,7 +612,7 @@ Transform:
   m_GameObject: {fileID: 2052093098}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.58, y: -3.52, z: -0.8712}
-  m_LocalScale: {x: 8.658832, y: 1, z: 8.407031}
+  m_LocalScale: {x: 100, y: 1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4

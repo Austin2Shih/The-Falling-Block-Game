@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
 
     Rigidbody rb;
+    public int horizontalMoveScaler = 12;
+    public int jumpPower = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,36 +17,38 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 moveDir = new Vector3(0, 0, 0);
-        
+        checkMove();
+    }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+    void checkMove()
+    {
+        Vector3 moveDir = new Vector3(0, rb.velocity.y, 0);
+
+        if (Input.GetKey(KeyCode.A))
         {
-            moveDir.x = -1;
+            moveDir.x = -horizontalMoveScaler;
         }
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.D))
         {
-            moveDir.x = 1;
+            moveDir.x = horizontalMoveScaler;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.W))
         {
-            moveDir.z = -1;
+            moveDir.z = horizontalMoveScaler;
         }
 
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.S))
         {
-            moveDir.z = 1;
+            moveDir.z = -horizontalMoveScaler;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            moveDir.y += 50;
+            moveDir.y += jumpPower;
         }
 
-        Debug.Log(moveDir.ToString());
-
-        rb.AddForce(moveDir * 10);
+        rb.velocity = moveDir;
     }
 }
