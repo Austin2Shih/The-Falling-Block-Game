@@ -11,8 +11,6 @@ public class ObjectPooler : MonoBehaviour
         public GameObject prefab;
         public int size;
     }
-    public int spawnHeight;
-    public int blockSize;
 
     public static ObjectPooler Instance;
 
@@ -43,7 +41,7 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    public GameObject SpawnFromPool(string tag, int x, int z)
+    public GameObject SpawnFromPool(string tag, Vector3 pos, Quaternion rotation)
     {
         if (!poolDict.ContainsKey(tag))
         {
@@ -52,15 +50,10 @@ public class ObjectPooler : MonoBehaviour
         }
 
         GameObject objectToSpawn = poolDict[tag].Dequeue();
-        Rigidbody rb;
 
         objectToSpawn.SetActive(true);
         
-        Vector3 newPos = new Vector3(x * blockSize, spawnHeight, z * blockSize);
-        objectToSpawn.transform.position = newPos;
-
-        rb = objectToSpawn.GetComponent<Rigidbody>();
-        rb.velocity = Vector3.zero;
+        objectToSpawn.transform.position = pos;
   
         poolDict[tag].Enqueue(objectToSpawn);
 

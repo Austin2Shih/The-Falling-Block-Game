@@ -261,8 +261,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e33076c818ebd745949baabb566a1b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnHeight: 20
-  blockSize: 2
   pools:
   - tag: Block
     prefab: {fileID: 6889523814151390195, guid: c474ed48ffb789141ac6b64ff57dd4c5, type: 3}
@@ -385,7 +383,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8156863, a: 1}
+  m_Color: {r: 0.6639302, g: 0.6792453, b: 0.51584196, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -666,6 +664,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0293af32d70e5644a4fbcd55364a3a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnDelay: 1
+  spawnHeight: 20
+  gridX: 7
+  gridZ: 7
+  block: {fileID: 6889523814151390195, guid: c474ed48ffb789141ac6b64ff57dd4c5, type: 3}
 --- !u!1 &2052093098
 GameObject:
   m_ObjectHideFlags: 0
@@ -680,7 +683,7 @@ GameObject:
   - component: {fileID: 2052093099}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Building Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

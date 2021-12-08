@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 6889523814151390198}
   - component: {fileID: 6889523814151390197}
   - component: {fileID: 6889523814151390196}
+  - component: {fileID: 7598982134971780749}
   m_Layer: 0
   m_Name: Block
-  m_TagString: Untagged
+  m_TagString: Building Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -90,11 +91,11 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6889523814151390195}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: c5a91fc4838c356459d4f998758be832, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.98, y: 1, z: 0.98}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6889523814151390196
 Rigidbody:
@@ -106,9 +107,21 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 122
   m_CollisionDetection: 0
+--- !u!114 &7598982134971780749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6889523814151390195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b477289318bfc9341835631e993d1999, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
