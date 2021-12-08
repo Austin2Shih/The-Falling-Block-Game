@@ -24,10 +24,5 @@ public class BlockSpawner : MonoBehaviour
             count = 0;
             objectPooler.SpawnFromPool("Block", x, z);
         }
-        
-        if (Input.GetKeyDown("space"))
-        {
-        }
     }
-
 }

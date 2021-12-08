@@ -4,51 +4,36 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public float speed;
+    public float jumpPower;
 
     Rigidbody rb;
-    public int horizontalMoveScaler = 12;
-    public int jumpPower = 10;
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = this.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        checkMove();
+        Movement();
+        Jump();
     }
 
-    void checkMove()
+    void Movement()
     {
-        Vector3 moveDir = new Vector3(0, rb.velocity.y, 0);
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 playerMove = new Vector3(horizontal, 0, vertical) * speed * Time.deltaTime;
+        transform.Translate(playerMove, Space.Self);
+    }
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            moveDir.x = -horizontalMoveScaler;
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            moveDir.x = horizontalMoveScaler;
-        }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            moveDir.z = horizontalMoveScaler;
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            moveDir.z = -horizontalMoveScaler;
-        }
-
+    void Jump()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            moveDir.y += jumpPower;
+            rb.AddForce(Vector3.up * jumpPower);
         }
-
-        rb.velocity = moveDir;
     }
 }

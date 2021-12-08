@@ -11,8 +11,8 @@ public class ObjectPooler : MonoBehaviour
         public GameObject prefab;
         public int size;
     }
-    public static int spawnHeight = 15;
-    public static int blockSize = 1;
+    public int spawnHeight;
+    public int blockSize;
 
     public static ObjectPooler Instance;
 
