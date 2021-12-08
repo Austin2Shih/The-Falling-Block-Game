@@ -78,4 +78,11 @@ public class BlockSpawner : MonoBehaviour
         }
         Debug.Log(debugMessage);
     }
+
+    public Vector3 gridToCoords(int x, int y, int z)
+    {
+        Vector3 outputVector = new Vector3(x, y, z) * blockSize;
+        outputVector += (blockSize/2.2f) * Vector3.up;
+        return outputVector;
+    }
 }
