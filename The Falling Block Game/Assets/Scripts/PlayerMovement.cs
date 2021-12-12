@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpPower;
     public float moveDist;
 
-    public int currX, currZ;
+    public int currX, currY, currZ;
 
     Rigidbody rb;
     BlockSpawner blockSpawner;
@@ -17,77 +17,89 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = this.GetComponent<Rigidbody>();
         blockSpawner = BlockSpawner.Instance;
-        Vector3 currPos = this.transform.position;
-        currPos -= new Vector3(-moveDist / 2, 0, -moveDist / 2);
-        currPos *= (1.0f / moveDist);
-        int currX = Mathf.RoundToInt(currPos.x);
-        int currZ = Mathf.RoundToInt(currPos.z);
+        this.transform.position = new Vector3(moveDist / 2.0f, moveDist / 2.0f, moveDist / 2.0f);
+        currX = 0;
+        currY = 0;
+        currZ = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //RawMovement();
-        //RawJump();
+        currY = blockSpawner.grid[currX, currZ];
         restrictedMove();
     }
 
     void restrictedMove()
     {
-        int currY = blockSpawner.grid[currX, currZ];
         if (Input.GetKeyDown(KeyCode.W))
         {
-            if (currZ + 1 < blockSpawner.gridZ)
-            {
-                int targetHeight = blockSpawner.grid[currX, currZ + 1];
-                if (targetHeight <= currY + 1)
-                {
-                    Vector3 relativeMove = new Vector3(0, (targetHeight - currY), 1) * moveDist;
-                    currZ++;
-                    transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
-                }
-            }
+            addZ();
         } 
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            if(currZ - 1 >= 0)
-            {
-                int targetHeight = blockSpawner.grid[currX, currZ - 1];
-                if (targetHeight <= currY + 1)
-                {
-                    Vector3 relativeMove = new Vector3(0, (targetHeight - currY), -1) * moveDist;
-                    currZ--;
-                    transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
-                }
-            }
+            subZ();
         } 
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            if (currX + 1 < blockSpawner.gridX)
-            {
-                int targetHeight = blockSpawner.grid[currX + 1, currZ];
-                if (targetHeight <= currY + 1)
-                {
-                    Vector3 relativeMove = new Vector3(1, (targetHeight - currY), 0) * moveDist;
-                    currX++;
-                    transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
-                }
-            }
+            addX();
         } 
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            if (currX - 1 >= 0)
+            subX();
+        }
+    }
+
+    void addZ()
+    {
+        if (currZ + 1 < blockSpawner.gridZ)
+        {
+            int targetHeight = blockSpawner.grid[currX, currZ + 1];
+            if (targetHeight <= currY + 1)
             {
-                int targetHeight = blockSpawner.grid[currX - 1, currZ];
-                if (targetHeight <= currY + 1)
-                {
-                    Vector3 relativeMove = new Vector3(-1, (targetHeight - currY), 0) * moveDist;
-                    currX--;
-                    transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
-                }
+                currZ++;
+                transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
             }
         }
     }
 
+    void subZ()
+    {
+        if (currZ - 1 >= 0)
+        {
+            int targetHeight = blockSpawner.grid[currX, currZ - 1];
+            if (targetHeight <= currY + 1)
+            {
+                currZ--;
+                transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
+            }
+        }
+    }
+
+    void addX()
+    {
+        if (currX + 1 < blockSpawner.gridX)
+        {
+            int targetHeight = blockSpawner.grid[currX + 1, currZ];
+            if (targetHeight <= currY + 1)
+            {
+                currX++;
+                transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
+            }
+        }
+    }
+
+    void subX()
+    {
+        if (currX - 1 >= 0)
+        {
+            int targetHeight = blockSpawner.grid[currX - 1, currZ];
+            if (targetHeight <= currY + 1)
+            {
+                currX--;
+                transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
+            }
+        }
+    }
 
 }

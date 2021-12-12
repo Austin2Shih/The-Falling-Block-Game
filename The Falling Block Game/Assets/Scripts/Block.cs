@@ -4,8 +4,18 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
+    public float fallAccel = -9.8f;
+
     Rigidbody rb;
     int blockSize;
+    bool stable; //variable indicating if the block has settled or not.
+
+    private float timeStartFall;
+    private float fallVelocity;
+    private int currX;
+    private int currZ;
+
+
     BlockSpawner blockSpawner;
     void Start()
     {
@@ -16,7 +26,8 @@ public class Block : MonoBehaviour
 
     private void FixedUpdate()
     {
-        preventBounce();
+        fallFromSpawn();
+            
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -30,16 +41,45 @@ public class Block : MonoBehaviour
         {
             int x = (int)this.transform.position.x / blockSize;
             int z = (int)this.transform.position.z / blockSize;
-            blockSpawner.grid[x, z] ++;
+            blockSpawner.grid[x, z]++;
             blockSpawner.printGrid();
         }
     }
 
-    private void preventBounce()
+    public void spawn(int x, int z)
     {
-        if (rb.velocity.y > 0)
+        fallVelocity = 0;
+        timeStartFall = Time.fixedTime;
+        currX = x;
+        currZ = z;
+        stable = false;
+    }
+    private void fallFromSpawn()
+    {
+        if (stable)
         {
-            rb.velocity = Vector3.zero;
+            return;
         }
+        int destinationHeight = blockSpawner.grid[currX, currZ];
+        float worldDestHeight = gridHeightToWorldHeight(destinationHeight);
+        Vector3 currPos = transform.position;
+        if (currPos.y <= worldDestHeight)
+        {
+            transform.position = new Vector3(currPos.x, worldDestHeight, currPos.z);
+            stable = true;
+            fallVelocity = 0;
+            blockSpawner.grid[currX, currZ]++;
+        } else
+        {
+            float timeFallen = Time.fixedTime - timeStartFall;
+            fallVelocity = fallAccel * timeFallen;
+        }
+
+        rb.velocity = Vector3.up * fallVelocity;
+    }
+
+    private float gridHeightToWorldHeight(int gridHeight)
+    {
+        return blockSize / 2 + gridHeight * blockSize;
     }
 }

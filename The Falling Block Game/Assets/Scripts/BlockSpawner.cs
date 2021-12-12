@@ -55,13 +55,11 @@ public class BlockSpawner : MonoBehaviour
         int x = Random.Range(0, gridX);
         int z = Random.Range(0, gridZ);
         Vector3 spawnLocation = new Vector3(x, spawnHeight, z) * blockSize;
+        spawnLocation += new Vector3(blockSize / 2, 0, blockSize / 2);
         GameObject spawnedBlock = objectPooler.SpawnFromPool("Block", spawnLocation, Quaternion.identity);
 
         spawnedBlock.SetActive(true);
-
-        Rigidbody rb;
-        rb = spawnedBlock.GetComponent<Rigidbody>();
-        rb.velocity = -0.01f * Vector3.up;
+        spawnedBlock.GetComponent<Block>().spawn(x, z);
     }
 
     public void printGrid()
@@ -82,7 +80,12 @@ public class BlockSpawner : MonoBehaviour
     public Vector3 gridToCoords(int x, int y, int z)
     {
         Vector3 outputVector = new Vector3(x, y, z) * blockSize;
-        outputVector += (blockSize/2.2f) * Vector3.up;
+        outputVector += new Vector3(blockSize / 2.0f, blockSize / 2.0f, blockSize / 2.0f);
         return outputVector;
+    }
+
+    public float getBlockSize()
+    {
+        return blockSize;
     }
 }
