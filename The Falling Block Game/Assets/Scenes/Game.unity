@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offSet: 8
-  camHeight: 13
+  camHeight: 10
   centerHeight: 0
   currPos: 0
 --- !u!20 &184982340
@@ -756,11 +756,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0293af32d70e5644a4fbcd55364a3a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnDelay: 0.25
+  spawnDelay: 0.1
   spawnHeight: 20
   gridX: 7
   gridZ: 7
-  block: {fileID: 6889523814151390195, guid: c474ed48ffb789141ac6b64ff57dd4c5, type: 3}
+  amountMapDropped: 0
 --- !u!1 &2052093098
 GameObject:
   m_ObjectHideFlags: 0

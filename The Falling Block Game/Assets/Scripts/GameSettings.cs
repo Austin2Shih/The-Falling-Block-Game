@@ -7,5 +7,5 @@ public static class GameSettings
     public static int gridX = 7;
     public static int gridZ = 7;
     public static int blockSize = 2;
-
+    public static float mapDropPeriod = 20; // in seconds per block
 }

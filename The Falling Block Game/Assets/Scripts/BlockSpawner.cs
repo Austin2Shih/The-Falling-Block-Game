@@ -10,10 +10,10 @@ public class BlockSpawner : MonoBehaviour
     public int gridX;
     public int gridZ;
 
-    public GameObject block;
-
     ObjectPooler objectPooler;
     private float prevSpawn;
+    private float prevMapDropReset;
+    public int amountMapDropped = 0;
     private float blockSize;
     public int[,] grid;
 
@@ -28,7 +28,8 @@ public class BlockSpawner : MonoBehaviour
     {
         objectPooler = ObjectPooler.Instance;
         prevSpawn = Time.fixedTime;
-        blockSize = block.transform.localScale.x;
+        prevMapDropReset = Time.fixedTime;
+        blockSize = GameSettings.blockSize;
         grid = new int[gridX, gridZ];
         for (int i = 0; i < gridX; i++)
         {
@@ -48,6 +49,8 @@ public class BlockSpawner : MonoBehaviour
             prevSpawn = timeForFrame;
             spawnRandom();
         }
+
+        updateMapDrop();
     }
 
     void spawnRandom()
@@ -58,14 +61,13 @@ public class BlockSpawner : MonoBehaviour
         spawnLocation += new Vector3(blockSize / 2, 0, blockSize / 2);
         GameObject spawnedBlock = objectPooler.SpawnFromPool("Block", spawnLocation, Quaternion.identity);
 
-        spawnedBlock.SetActive(true);
         spawnedBlock.GetComponent<Block>().spawn(x, z);
     }
 
     public void despawnBlock(GameObject block)
     {
         block.SetActive(false);
-        objectPooler.poolDict[tag].Enqueue(block);
+        objectPooler.poolDict["Block"].Enqueue(block);
     }
 
     public void printGrid()
@@ -83,6 +85,20 @@ public class BlockSpawner : MonoBehaviour
         Debug.Log(debugMessage);
     }
 
+    public void removeGridLayer()
+    {
+        for (int i = 0; i < gridX; i++)
+        {
+            for (int j = 0; j < gridZ; j++)
+            {
+                if (grid[i, j] != 0)
+                {
+                    grid[i, j]--;
+                }
+            }
+        }
+    }
+
     public Vector3 gridToCoords(int x, int y, int z)
     {
         Vector3 outputVector = new Vector3(x, y, z) * blockSize;
@@ -90,8 +106,15 @@ public class BlockSpawner : MonoBehaviour
         return outputVector;
     }
 
-    public float getBlockSize()
+    private void updateMapDrop()
     {
-        return blockSize;
+        float dTime = Time.fixedTime - prevMapDropReset;
+        if (dTime >= GameSettings.mapDropPeriod)
+        {
+            amountMapDropped++;
+            prevMapDropReset = Time.fixedTime;
+            removeGridLayer();
+        }
     }
+
 }

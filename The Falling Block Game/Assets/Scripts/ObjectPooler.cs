@@ -54,8 +54,6 @@ public class ObjectPooler : MonoBehaviour
         objectToSpawn.SetActive(true);
         
         objectToSpawn.transform.position = pos;
-  
-        poolDict[tag].Enqueue(objectToSpawn);
 
         return objectToSpawn;
     }

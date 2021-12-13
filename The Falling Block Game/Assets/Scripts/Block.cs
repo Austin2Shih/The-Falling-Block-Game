@@ -15,6 +15,9 @@ public class Block : MonoBehaviour
     private int currX;
     private int currZ;
     private float despawnHeight;
+    private int amountMapDropped = 0;
+    private float timeStartDespawn;
+    private float despawnTime;
 
 
     BlockSpawner blockSpawner;
@@ -29,6 +32,8 @@ public class Block : MonoBehaviour
     private void FixedUpdate()
     {
         fallFromSpawn();
+        mapDrop();
+        deconstructBottom();
             
     }
 
@@ -50,6 +55,9 @@ public class Block : MonoBehaviour
 
     public void spawn(int x, int z)
     {
+        timeStartDespawn = 0;
+        despawnTime = 0;
+        amountMapDropped = 0;
         fallVelocity = 0;
         timeStartFall = Time.fixedTime;
         currX = x;
@@ -65,10 +73,15 @@ public class Block : MonoBehaviour
         int destinationHeight = blockSpawner.grid[currX, currZ];
         float worldDestHeight = gridHeightToWorldHeight(destinationHeight);
         Vector3 currPos = transform.position;
+
+        amountMapDropped = blockSpawner.amountMapDropped;
+
         if (currPos.y <= worldDestHeight)
         {
-            transform.position = new Vector3(currPos.x, worldDestHeight, currPos.z);
+            Vector3 newPosition = new Vector3(currPos.x, worldDestHeight, currPos.z);
+            transform.position = newPosition;
             stable = true;
+            
             fallVelocity = 0;
             blockSpawner.grid[currX, currZ]++;
         } else
@@ -80,17 +93,33 @@ public class Block : MonoBehaviour
         rb.velocity = Vector3.up * fallVelocity;
     }
 
+    public void mapDrop()
+    {   
+        if (stable && amountMapDropped < blockSpawner.amountMapDropped)
+        {
+            amountMapDropped++;
+            transform.Translate(Vector3.up * -blockSize);
+        }
+    }
+
     private void deconstructBottom()
     {
-
-        if (transform.position.y <= despawnHeight)
+        if (timeStartDespawn == 0)
         {
-            blockSpawner.despawnBlock(this.GetComponent<GameObject>());
+            if (transform.position.y - 0.1 <= despawnHeight)
+            {
+                timeStartDespawn = Time.fixedTime;
+                despawnTime = timeStartDespawn + Random.Range(0.5f, 3.5f);
+            }
+        } else if (Time.fixedTime >= despawnTime)
+        {
+            blockSpawner.despawnBlock(gameObject);
         }
+
     }
 
     private float gridHeightToWorldHeight(int gridHeight)
     {
-        return blockSize / 2 + gridHeight * blockSize;
+        return blockSize / 2.0f + gridHeight * blockSize;
     }
 }

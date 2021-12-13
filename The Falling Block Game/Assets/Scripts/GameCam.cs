@@ -11,6 +11,7 @@ public class GameCam : MonoBehaviour
     }
 
     PlayerMovement player;
+    BlockSpawner blockSpawner;
 
     public float offSet;
     public float camHeight;
@@ -21,10 +22,14 @@ public class GameCam : MonoBehaviour
     Vector3[] positions;
     Vector3 center;
     public int currPos;
+
+    private int amountMapDropped = 0;
+
     // Start is called before the first frame update
     void Start()
     {
         player = PlayerMovement.Instance;
+        blockSpawner = BlockSpawner.Instance;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         gridX = GameSettings.gridX;
@@ -47,6 +52,7 @@ public class GameCam : MonoBehaviour
     void Update()
     {
         updatePosition();
+        mapDrop();
     }
 
     void updatePosition()
@@ -67,5 +73,17 @@ public class GameCam : MonoBehaviour
         Vector3 playerHeightShift = (Vector3.up * player.currY * GameSettings.blockSize);
         transform.position = positions[currPos] + playerHeightShift;
         transform.LookAt(center + playerHeightShift);
+    }
+
+    public void mapDrop()
+    {
+        if (amountMapDropped < blockSpawner.amountMapDropped)
+        {
+            if (player.transform.position.y > 1.01)
+            {
+                transform.Translate(Vector3.up * -GameSettings.blockSize);
+            }
+            amountMapDropped++;
+        }
     }
 }

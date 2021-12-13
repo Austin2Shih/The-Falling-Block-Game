@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     BlockSpawner blockSpawner;
     GameCam gameCam;
+    private int amountMapDropped = 0;
 
     private void Start()
     {
@@ -34,6 +35,19 @@ public class PlayerMovement : MonoBehaviour
     {
         currY = blockSpawner.grid[currX, currZ];
         restrictedMove();
+        mapDrop();
+    }
+
+    public void mapDrop()
+    {
+        if (amountMapDropped < blockSpawner.amountMapDropped)
+        {
+            if (transform.position.y > 1.01)
+            {
+                transform.Translate(Vector3.up * -GameSettings.blockSize);
+            }
+            amountMapDropped++;
+        }
     }
 
     void restrictedMove()
