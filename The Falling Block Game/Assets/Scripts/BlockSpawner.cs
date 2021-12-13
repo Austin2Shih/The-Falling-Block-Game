@@ -62,6 +62,12 @@ public class BlockSpawner : MonoBehaviour
         spawnedBlock.GetComponent<Block>().spawn(x, z);
     }
 
+    public void despawnBlock(GameObject block)
+    {
+        block.SetActive(false);
+        objectPooler.poolDict[tag].Enqueue(block);
+    }
+
     public void printGrid()
     {
         string debugMessage = "\n";

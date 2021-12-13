@@ -14,6 +14,7 @@ public class Block : MonoBehaviour
     private float fallVelocity;
     private int currX;
     private int currZ;
+    private float despawnHeight;
 
 
     BlockSpawner blockSpawner;
@@ -22,6 +23,7 @@ public class Block : MonoBehaviour
         blockSpawner = BlockSpawner.Instance;
         rb = this.GetComponent<Rigidbody>();
         blockSize = (int)this.transform.localScale.x;
+        despawnHeight = gridHeightToWorldHeight(-1);
     }
 
     private void FixedUpdate()
@@ -76,6 +78,15 @@ public class Block : MonoBehaviour
         }
 
         rb.velocity = Vector3.up * fallVelocity;
+    }
+
+    private void deconstructBottom()
+    {
+
+        if (transform.position.y <= despawnHeight)
+        {
+            blockSpawner.despawnBlock(this.GetComponent<GameObject>());
+        }
     }
 
     private float gridHeightToWorldHeight(int gridHeight)

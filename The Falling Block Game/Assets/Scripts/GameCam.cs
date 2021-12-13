@@ -4,27 +4,32 @@ using UnityEngine;
 
 public class GameCam : MonoBehaviour
 {
-    //BlockSpawner blockSpawner;
+    public static GameCam Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    PlayerMovement player;
+
     public float offSet;
     public float camHeight;
     public float centerHeight;
-    int gridX = 7;
-    int gridZ = 7;
-    float blockSize = 2;
+    int gridX;
+    int gridZ;
+    float blockSize;
     Vector3[] positions;
     Vector3 center;
-    int currPos;
+    public int currPos;
     // Start is called before the first frame update
     void Start()
     {
+        player = PlayerMovement.Instance;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        /*
-        blockSpawner = BlockSpawner.Instance;
-        gridX = blockSpawner.gridX;
-        gridZ = blockSpawner.gridZ;
-        blockSize = blockSpawner.getBlockSize();
-        */
+        gridX = GameSettings.gridX;
+        gridZ = GameSettings.gridZ;
+        blockSize = GameSettings.blockSize;
         positions = new Vector3[4];
         positions[0] = new Vector3((gridX / 2.0f) * blockSize, blockSize * camHeight, blockSize * -offSet);
         positions[1] = new Vector3(blockSize * (gridX + offSet), blockSize * camHeight, (gridZ / 2.0f) * blockSize);
@@ -58,7 +63,9 @@ public class GameCam : MonoBehaviour
         } else if (Input.GetKeyDown(KeyCode.RightArrow)){
             currPos = (currPos + 1) % 4;
         }
-        transform.position = positions[currPos];
-        transform.LookAt(center);
+
+        Vector3 playerHeightShift = (Vector3.up * player.currY * GameSettings.blockSize);
+        transform.position = positions[currPos] + playerHeightShift;
+        transform.LookAt(center + playerHeightShift);
     }
 }
