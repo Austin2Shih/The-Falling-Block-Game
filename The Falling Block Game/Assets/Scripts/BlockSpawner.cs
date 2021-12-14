@@ -44,24 +44,29 @@ public class BlockSpawner : MonoBehaviour
     void Update()
     {
         float timeForFrame = Time.fixedTime;
-        if (timeForFrame >= prevSpawn + spawnDelay)
+        if ((timeForFrame >= prevSpawn + spawnDelay))
         {
             prevSpawn = timeForFrame;
-            spawnRandom();
+            StartCoroutine(spawnGridFromLinesZ(1, 1, 0.3f, 0.3f));
         }
 
         updateMapDrop();
+    }
+
+    void spawnBlock(int x, int z)
+    {
+        Vector3 spawnLocation = new Vector3(x, spawnHeight, z) * blockSize;
+        spawnLocation += new Vector3(blockSize / 2, 0, blockSize / 2);
+        GameObject spawnedBlock = objectPooler.SpawnFromPool("Block", spawnLocation, Quaternion.identity);
+
+        spawnedBlock.GetComponent<Block>().spawn(x, z);
     }
 
     void spawnRandom()
     {
         int x = Random.Range(0, gridX);
         int z = Random.Range(0, gridZ);
-        Vector3 spawnLocation = new Vector3(x, spawnHeight, z) * blockSize;
-        spawnLocation += new Vector3(blockSize / 2, 0, blockSize / 2);
-        GameObject spawnedBlock = objectPooler.SpawnFromPool("Block", spawnLocation, Quaternion.identity);
-
-        spawnedBlock.GetComponent<Block>().spawn(x, z);
+        spawnBlock(x, z);
     }
 
     public void despawnBlock(GameObject block)
@@ -114,6 +119,46 @@ public class BlockSpawner : MonoBehaviour
             amountMapDropped++;
             prevMapDropReset = Time.fixedTime;
             removeGridLayer();
+        }
+    }
+
+    private IEnumerator spawnLineZ(int positionZ, int direction, float timeBetweenSpawns)
+    {
+        if (direction > 0)
+        {
+            for (int i = 0; i < gridX; i++)
+            {
+                spawnBlock(i, positionZ);
+                yield return new WaitForSeconds(timeBetweenSpawns);
+            }
+        }
+        else
+        {
+            for (int i = gridX - 1; i >= 0; i--)
+            {
+                spawnBlock(i, positionZ);
+                yield return new WaitForSeconds(timeBetweenSpawns);
+            }
+        }
+    }
+
+    private IEnumerator spawnGridFromLinesZ(int directionX, int directionZ, float timeBetweenSpawns, float timeBetweenLines)
+    {
+        if (directionX > 0)
+        {
+            for (int i = 0; i < gridZ; i++)
+            {
+                StartCoroutine(spawnLineZ(i, directionZ, timeBetweenSpawns));
+                yield return new WaitForSeconds(timeBetweenLines);
+            }
+        }
+        else
+        {
+            for (int i = gridX - 1; i >= 0; i--)
+            {
+                StartCoroutine(spawnLineZ(i, directionZ, timeBetweenSpawns));
+                yield return new WaitForSeconds(timeBetweenLines);
+            }
         }
     }
 
