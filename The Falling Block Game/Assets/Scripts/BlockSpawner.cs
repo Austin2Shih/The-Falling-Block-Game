@@ -107,7 +107,7 @@ public class BlockSpawner : MonoBehaviour
     public Vector3 gridToCoords(int x, int y, int z)
     {
         Vector3 outputVector = new Vector3(x, y, z) * blockSize;
-        outputVector += new Vector3(blockSize / 2.0f, blockSize / 2.0f, blockSize / 2.0f);
+        outputVector += new Vector3(blockSize / 2.0f, blockSize / 4.0f, blockSize / 2.0f);
         return outputVector;
     }
 

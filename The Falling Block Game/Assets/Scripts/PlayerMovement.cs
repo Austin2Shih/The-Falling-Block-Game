@@ -15,16 +15,18 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
     BlockSpawner blockSpawner;
-    GameCam gameCam;
+    //GameCam gameCam;
+    FixedThirdPersonCam gameCam;
     private int amountMapDropped = 0;
 
     private void Start()
     {
         rb = this.GetComponent<Rigidbody>();
         blockSpawner = BlockSpawner.Instance;
-        gameCam = GameCam.Instance;
+        //gameCam = GameCam.Instance;
+        gameCam = FixedThirdPersonCam.Instance;
         moveDist = GameSettings.blockSize;
-        this.transform.position = new Vector3(moveDist / 2.0f, moveDist / 2.0f, moveDist / 2.0f);
+        this.transform.position = new Vector3(moveDist / 2.0f, moveDist / 4.0f, moveDist / 2.0f);
         currX = 0;
         currY = 0;
         currZ = 0;

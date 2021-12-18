@@ -276,6 +276,7 @@ GameObject:
   - component: {fileID: 184982341}
   - component: {fileID: 184982340}
   - component: {fileID: 184982339}
+  - component: {fileID: 184982342}
   m_Layer: 0
   m_Name: Game Cam
   m_TagString: Untagged
@@ -290,13 +291,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 184982338}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 33f3689fef233c5439360ac131b09292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   offSet: 8
-  camHeight: 10
+  camHeight: 6
   centerHeight: 0
   currPos: 0
 --- !u!20 &184982340
@@ -356,6 +357,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &184982342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184982338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 368314560bf95514a8a688449964ccc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offSet: 8
+  camHeight: 3
+  currPos: 0
 --- !u!1 &254299424
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +570,6 @@ GameObject:
   - component: {fileID: 768257759}
   - component: {fileID: 768257763}
   - component: {fileID: 768257764}
-  - component: {fileID: 768257765}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -570,7 +585,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 768257758}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -671,18 +686,6 @@ MonoBehaviour:
   currX: 0
   currY: 0
   currZ: 0
---- !u!114 &768257765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 768257758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ce3d70607332a443958b4f25b5c8425, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1474951234
 GameObject:
   m_ObjectHideFlags: 0
