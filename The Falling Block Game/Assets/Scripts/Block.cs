@@ -5,6 +5,8 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
     public float fallAccel = -9.8f;
+    public float opaqueAlpha = 0.3f;
+    public float solidAlpha = 1.0f;
 
     Rigidbody rb;
     int blockSize;
@@ -14,7 +16,6 @@ public class Block : MonoBehaviour
     private float fallVelocity;
     private int currX;
     private int currZ;
-    private float despawnHeight;
     private int amountMapDropped = 0;
     private float timeStartDespawn;
     private float despawnTime;
@@ -25,8 +26,8 @@ public class Block : MonoBehaviour
     {
         blockSpawner = BlockSpawner.Instance;
         rb = this.GetComponent<Rigidbody>();
-        blockSize = (int)this.transform.localScale.x;
-        despawnHeight = gridHeightToWorldHeight(-1);
+        blockSize = GameSettings.blockSize;
+        
     }
 
     private void FixedUpdate()
@@ -34,7 +35,6 @@ public class Block : MonoBehaviour
         fallFromSpawn();
         mapDrop();
         deconstructBottom();
-            
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -71,7 +71,7 @@ public class Block : MonoBehaviour
             return;
         }
         int destinationHeight = blockSpawner.grid[currX, currZ];
-        float worldDestHeight = gridHeightToWorldHeight(destinationHeight);
+        float worldDestHeight = blockSpawner.gridHeightToWorldHeight(destinationHeight);
         Vector3 currPos = transform.position;
 
         amountMapDropped = blockSpawner.amountMapDropped;
@@ -79,11 +79,13 @@ public class Block : MonoBehaviour
         if (currPos.y <= worldDestHeight)
         {
             Vector3 newPosition = new Vector3(currPos.x, worldDestHeight, currPos.z);
-            transform.position = newPosition;
+            rb.MovePosition(newPosition);
             stable = true;
             
             fallVelocity = 0;
+            int currTowerHeight = blockSpawner.grid[currX, currZ];
             blockSpawner.grid[currX, currZ]++;
+            blockSpawner.setBlockMatrix(currTowerHeight, currX, currZ, this.gameObject);
         } else
         {
             float timeFallen = Time.fixedTime - timeStartFall;
@@ -98,7 +100,8 @@ public class Block : MonoBehaviour
         if (stable && amountMapDropped < blockSpawner.amountMapDropped)
         {
             amountMapDropped++;
-            transform.Translate(Vector3.up * -blockSize);
+            Vector3 newPos = transform.position - Vector3.up * blockSize;
+            rb.MovePosition(newPos);
         }
     }
 
@@ -106,7 +109,7 @@ public class Block : MonoBehaviour
     {
         if (timeStartDespawn == 0)
         {
-            if (transform.position.y - 0.1 <= despawnHeight)
+            if (transform.position.y - 0.1 <= blockSpawner.despawnHeight)
             {
                 timeStartDespawn = Time.fixedTime;
                 despawnTime = timeStartDespawn + Random.Range(0.5f, 3.5f);
@@ -118,8 +121,20 @@ public class Block : MonoBehaviour
 
     }
 
-    private float gridHeightToWorldHeight(int gridHeight)
+    void ChangeAlpha(Material mat, float alphaVal)
     {
-        return blockSize / 2.0f + gridHeight * blockSize;
+        Color oldColor = mat.color;
+        Color newColor = new Color(oldColor.r, oldColor.g, oldColor.b, alphaVal);
+        mat.SetColor("_Color", newColor);
+    }
+
+    public void setOpaque()
+    {
+        ChangeAlpha(gameObject.GetComponent<Renderer>().material, opaqueAlpha);
+    }
+
+    public void setSolid()
+    {
+        ChangeAlpha(gameObject.GetComponent<Renderer>().material, solidAlpha);
     }
 }

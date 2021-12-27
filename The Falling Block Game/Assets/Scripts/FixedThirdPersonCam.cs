@@ -43,6 +43,7 @@ public class FixedThirdPersonCam : MonoBehaviour
     {
         updatePosition();
         mapDrop();
+        clearObstructions();
     }
 
     void updatePosition()
@@ -71,7 +72,7 @@ public class FixedThirdPersonCam : MonoBehaviour
     private Vector3 getCamPosition(int position)
     {
         Vector3 playerPos = player.transform.position;
-        switch(position)
+        switch (position)
         {
             case 1:
                 return new Vector3(playerPos.x + blockSize * offSet, blockSize * camHeight, playerPos.z);
@@ -99,4 +100,28 @@ public class FixedThirdPersonCam : MonoBehaviour
             amountMapDropped++;
         }
     }
+
+    private void clearObstructions()
+    {
+        switch (currPos)
+        {
+            case 0:
+                for (int i = player.currY; i < blockSpawner.gridY; i++)
+                {
+                    for (int j = 0; j < player.currZ; j++)
+                    {
+                        for (int k = 0; k < blockSpawner.gridX; k++)
+                        {
+                            if (blockSpawner.getBlockMatrix(i, k, j) != null)
+                            {
+                                GameObject block = blockSpawner.getBlockMatrix(i, k, j);
+                                block.GetComponent<Block>().setOpaque();
+                            }    
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
 }

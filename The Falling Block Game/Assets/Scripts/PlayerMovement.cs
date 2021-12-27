@@ -15,18 +15,18 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
     BlockSpawner blockSpawner;
-    //GameCam gameCam;
     FixedThirdPersonCam gameCam;
     private int amountMapDropped = 0;
+    private int maxPlayerHeight = 5;
 
     private void Start()
     {
         rb = this.GetComponent<Rigidbody>();
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
         blockSpawner = BlockSpawner.Instance;
-        //gameCam = GameCam.Instance;
         gameCam = FixedThirdPersonCam.Instance;
         moveDist = GameSettings.blockSize;
-        this.transform.position = new Vector3(moveDist / 2.0f, moveDist / 4.0f, moveDist / 2.0f);
+        rb.MovePosition(new Vector3(moveDist / 2.0f, moveDist / 4.0f, moveDist / 2.0f));
         currX = 0;
         currY = 0;
         currZ = 0;
@@ -38,6 +38,16 @@ public class PlayerMovement : MonoBehaviour
         currY = blockSpawner.grid[currX, currZ];
         restrictedMove();
         mapDrop();
+        checkHeightIncrease();
+    }
+
+    void checkHeightIncrease()
+    {
+        if (currY > maxPlayerHeight)
+        {
+            blockSpawner.incrementDespawnHeight();
+            maxPlayerHeight = currY;
+        }
     }
 
     public void mapDrop()
@@ -46,12 +56,12 @@ public class PlayerMovement : MonoBehaviour
         {
             if (transform.position.y > 1.01)
             {
-                transform.Translate(Vector3.up * -GameSettings.blockSize);
+                Vector3 newPos = transform.position - Vector3.up * GameSettings.blockSize;
+                rb.MovePosition(newPos);
             }
             amountMapDropped++;
         }
     }
-
     void restrictedMove()
     {
         switch(gameCam.currPos) 
@@ -73,7 +83,6 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
     }
-
     void restrictedMove0()
     {
         if (Input.GetKeyDown(KeyCode.W))
@@ -93,7 +102,6 @@ public class PlayerMovement : MonoBehaviour
             subX();
         }
     }
-
     void restrictedMove1()
     {
         if (Input.GetKeyDown(KeyCode.D))
@@ -113,7 +121,6 @@ public class PlayerMovement : MonoBehaviour
             subX();
         }
     }
-
     void restrictedMove2()
     {
         if (Input.GetKeyDown(KeyCode.S))
@@ -133,7 +140,6 @@ public class PlayerMovement : MonoBehaviour
             subX();
         }
     }
-
     void restrictedMove3()
     {
         if (Input.GetKeyDown(KeyCode.A))
@@ -153,7 +159,6 @@ public class PlayerMovement : MonoBehaviour
             subX();
         }
     }
-
     void addZ()
     {
         if (currZ + 1 < blockSpawner.gridZ)
@@ -162,11 +167,10 @@ public class PlayerMovement : MonoBehaviour
             if (targetHeight <= currY + 1)
             {
                 currZ++;
-                transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
+                rb.MovePosition(blockSpawner.gridToCoords(currX, targetHeight, currZ));
             }
         }
     }
-
     void subZ()
     {
         if (currZ - 1 >= 0)
@@ -175,11 +179,10 @@ public class PlayerMovement : MonoBehaviour
             if (targetHeight <= currY + 1)
             {
                 currZ--;
-                transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
+                rb.MovePosition(blockSpawner.gridToCoords(currX, targetHeight, currZ));
             }
         }
     }
-
     void addX()
     {
         if (currX + 1 < blockSpawner.gridX)
@@ -188,11 +191,10 @@ public class PlayerMovement : MonoBehaviour
             if (targetHeight <= currY + 1)
             {
                 currX++;
-                transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
+                rb.MovePosition(blockSpawner.gridToCoords(currX, targetHeight, currZ));
             }
         }
     }
-
     void subX()
     {
         if (currX - 1 >= 0)
@@ -201,7 +203,7 @@ public class PlayerMovement : MonoBehaviour
             if (targetHeight <= currY + 1)
             {
                 currX--;
-                transform.position = blockSpawner.gridToCoords(currX, targetHeight, currZ);
+                rb.MovePosition(blockSpawner.gridToCoords(currX, targetHeight, currZ));
             }
         }
     }

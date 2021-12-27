@@ -6,8 +6,9 @@ using UnityEngine;
 public class BlockSpawner : MonoBehaviour
 {
     public float spawnDelay;
-    public int spawnHeight;
+    public float spawnHeight;
     public int gridX;
+    public int gridY;
     public int gridZ;
 
     ObjectPooler objectPooler;
@@ -16,6 +17,10 @@ public class BlockSpawner : MonoBehaviour
     public int amountMapDropped = 0;
     private float blockSize;
     public int[,] grid;
+    public GameObject[,,] blockMatrix;
+    public int matrixFloor;
+    public float despawnHeight;
+
 
     public static BlockSpawner Instance;
     private void Awake()
@@ -38,6 +43,19 @@ public class BlockSpawner : MonoBehaviour
                 grid[i, j] = 0;
             }
         }
+        blockMatrix = new GameObject[gridY, gridX, gridZ];
+        for (int i = 0; i < gridY; i++)
+        {
+            for (int j = 0; j < gridX; j++)
+            {
+                for (int k = 0; k < gridZ; k++)
+                {
+                    blockMatrix[i, j, k] = null;
+                }
+            }
+        }
+        matrixFloor = 0;
+        despawnHeight = gridHeightToWorldHeight(-1);
     }
 
     // Update is called once per frame
@@ -73,6 +91,25 @@ public class BlockSpawner : MonoBehaviour
     {
         block.SetActive(false);
         objectPooler.poolDict["Block"].Enqueue(block);
+        if (matrixFloor < gridY - 1)
+        {
+            matrixFloor++;
+        } else
+        {
+            matrixFloor = 0;
+        }
+    }
+
+    public void setBlockMatrix(int y, int x, int z, GameObject block)
+    {
+        int matrixY = (y + matrixFloor) % gridY;
+        blockMatrix[matrixY, x, z] = block;
+    }
+
+    public GameObject getBlockMatrix(int y, int x, int z)
+    {
+        int matrixY = (y + matrixFloor) % gridY;
+        return blockMatrix[matrixY, x, z];
     }
 
     public void printGrid()
@@ -109,6 +146,17 @@ public class BlockSpawner : MonoBehaviour
         Vector3 outputVector = new Vector3(x, y, z) * blockSize;
         outputVector += new Vector3(blockSize / 2.0f, blockSize / 4.0f, blockSize / 2.0f);
         return outputVector;
+    }
+
+    public float gridHeightToWorldHeight(int gridHeight)
+    {
+        return blockSize / 2.0f + gridHeight * blockSize;
+    }
+
+    public void incrementDespawnHeight()
+    {
+        despawnHeight += blockSize;
+        spawnHeight += blockSize;
     }
 
     private void updateMapDrop()
@@ -161,5 +209,6 @@ public class BlockSpawner : MonoBehaviour
             }
         }
     }
+
 
 }

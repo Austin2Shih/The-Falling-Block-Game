@@ -805,8 +805,11 @@ MonoBehaviour:
   spawnDelay: 5
   spawnHeight: 20
   gridX: 7
+  gridY: 11
   gridZ: 7
   amountMapDropped: 0
+  matrixFloor: 0
+  despawnHeight: 0
 --- !u!1 &2052093098
 GameObject:
   m_ObjectHideFlags: 0

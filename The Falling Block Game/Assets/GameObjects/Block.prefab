@@ -113,6 +113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallAccel: -9.8
+  opaqueAlpha: 0.3
+  solidAlpha: 1
 --- !u!65 &-8580518784224630302
 BoxCollider:
   m_ObjectHideFlags: 0
