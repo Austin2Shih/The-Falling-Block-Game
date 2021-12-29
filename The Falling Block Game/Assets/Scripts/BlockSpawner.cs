@@ -65,7 +65,7 @@ public class BlockSpawner : MonoBehaviour
         if ((timeForFrame >= prevSpawn + spawnDelay))
         {
             prevSpawn = timeForFrame;
-            StartCoroutine(spawnGridFromLinesZ(1, 1, 0.3f, 0.3f));
+            StartCoroutine(spawnGridFromLinesZ(1, 1, 0.5f, 0.5f));
         }
 
         updateMapDrop();
@@ -91,13 +91,6 @@ public class BlockSpawner : MonoBehaviour
     {
         block.SetActive(false);
         objectPooler.poolDict["Block"].Enqueue(block);
-        if (matrixFloor < gridY - 1)
-        {
-            matrixFloor++;
-        } else
-        {
-            matrixFloor = 0;
-        }
     }
 
     public void setBlockMatrix(int y, int x, int z, GameObject block)
@@ -110,6 +103,12 @@ public class BlockSpawner : MonoBehaviour
     {
         int matrixY = (y + matrixFloor) % gridY;
         return blockMatrix[matrixY, x, z];
+    }
+
+    public int getBlockMatrixY(int y)
+    {
+        Debug.Log("rawY: " + y + " processedY: " + ((y + (gridY) - matrixFloor) % gridY) + " matrix floor: " + matrixFloor);
+        return (y + (gridY) - matrixFloor) % gridY;
     }
 
     public void printGrid()
@@ -155,6 +154,15 @@ public class BlockSpawner : MonoBehaviour
 
     public void incrementDespawnHeight()
     {
+        Debug.Log(matrixFloor);
+        if (matrixFloor < gridY - 1)
+        {
+            matrixFloor += 1;
+        }
+        else
+        {
+            matrixFloor = 0;
+        }
         despawnHeight += blockSize;
         spawnHeight += blockSize;
     }

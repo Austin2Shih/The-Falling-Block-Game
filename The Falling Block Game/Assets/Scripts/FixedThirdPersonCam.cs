@@ -21,6 +21,7 @@ public class FixedThirdPersonCam : MonoBehaviour
     public int currPos;
 
     private int amountMapDropped = 0;
+    private Vector3 prevPos;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +36,7 @@ public class FixedThirdPersonCam : MonoBehaviour
 
         currPos = 0;
         transform.position = getCamPosition(currPos);
+        prevPos = transform.position;
         transform.LookAt(player.transform.position);
     }
 
@@ -43,7 +45,6 @@ public class FixedThirdPersonCam : MonoBehaviour
     {
         updatePosition();
         mapDrop();
-        clearObstructions();
     }
 
     void updatePosition()
@@ -63,6 +64,7 @@ public class FixedThirdPersonCam : MonoBehaviour
         {
             currPos = (currPos + 1) % 4;
         }
+        GameSettings.camPos = currPos;
 
         Vector3 playerHeightShift = (Vector3.up * player.currY * GameSettings.blockSize);
         transform.position = getCamPosition(currPos) + playerHeightShift;
@@ -76,16 +78,12 @@ public class FixedThirdPersonCam : MonoBehaviour
         {
             case 1:
                 return new Vector3(playerPos.x + blockSize * offSet, blockSize * camHeight, playerPos.z);
-                break;
             case 2:
                 return new Vector3(playerPos.x, blockSize * camHeight, playerPos.z + blockSize * offSet);
-                break;
             case 3:
                 return new Vector3(playerPos.x - blockSize * offSet, blockSize * camHeight, playerPos.z);
-                break;
             default:
                 return new Vector3(playerPos.x, blockSize * camHeight, playerPos.z - blockSize * offSet);
-                break;
         }
     }
 
@@ -101,26 +99,15 @@ public class FixedThirdPersonCam : MonoBehaviour
         }
     }
 
-    private void clearObstructions()
+    private bool camChangeDetected()
     {
-        switch (currPos)
+        if (this.transform.position == prevPos)
         {
-            case 0:
-                for (int i = player.currY; i < blockSpawner.gridY; i++)
-                {
-                    for (int j = 0; j < player.currZ; j++)
-                    {
-                        for (int k = 0; k < blockSpawner.gridX; k++)
-                        {
-                            if (blockSpawner.getBlockMatrix(i, k, j) != null)
-                            {
-                                GameObject block = blockSpawner.getBlockMatrix(i, k, j);
-                                block.GetComponent<Block>().setOpaque();
-                            }    
-                        }
-                    }
-                }
-                break;
+            return false;
+        } else
+        {
+            prevPos = this.transform.position;
+            return true;
         }
     }
 

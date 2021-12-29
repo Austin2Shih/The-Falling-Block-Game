@@ -15,6 +15,7 @@ public class Block : MonoBehaviour
     private float timeStartFall;
     private float fallVelocity;
     private int currX;
+    private int currY;
     private int currZ;
     private int amountMapDropped = 0;
     private float timeStartDespawn;
@@ -35,6 +36,7 @@ public class Block : MonoBehaviour
         fallFromSpawn();
         mapDrop();
         deconstructBottom();
+        clearObstruction();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -81,6 +83,7 @@ public class Block : MonoBehaviour
             Vector3 newPosition = new Vector3(currPos.x, worldDestHeight, currPos.z);
             rb.MovePosition(newPosition);
             stable = true;
+            currY = destinationHeight;
             
             fallVelocity = 0;
             int currTowerHeight = blockSpawner.grid[currX, currZ];
@@ -137,4 +140,54 @@ public class Block : MonoBehaviour
     {
         ChangeAlpha(gameObject.GetComponent<Renderer>().material, solidAlpha);
     }
+
+    public void clearObstruction()
+    {
+        switch(GameSettings.camPos)
+        {
+            case 0:
+                if (currZ < GameSettings.playerZ && currY >= GameSettings.playerY)
+                {
+                    setOpaque();
+                } else
+                {
+                    setSolid();
+                }
+                break;
+
+            case 1:
+                if (currX > GameSettings.playerX && currY >= GameSettings.playerY)
+                {
+                    setOpaque();
+                }
+                else
+                {
+                    setSolid();
+                }
+                break;
+
+            case 2:
+                if (currZ > GameSettings.playerZ && currY >= GameSettings.playerY)
+                {
+                    setOpaque();
+                }
+                else
+                {
+                    setSolid();
+                }
+                break;
+
+            case 3:
+                if (currX < GameSettings.playerX && currY >= GameSettings.playerY)
+                {
+                    setOpaque();
+                }
+                else
+                {
+                    setSolid();
+                }
+                break;
+        }
+    }
+
 }

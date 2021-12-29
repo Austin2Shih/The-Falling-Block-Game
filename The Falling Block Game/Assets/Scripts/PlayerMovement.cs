@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     BlockSpawner blockSpawner;
     FixedThirdPersonCam gameCam;
     private int amountMapDropped = 0;
-    private int maxPlayerHeight = 5;
+    public int maxPlayerHeight = 5;
 
     private void Start()
     {
@@ -45,8 +45,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (currY > maxPlayerHeight)
         {
+            Debug.Log("max height: " + maxPlayerHeight);
             blockSpawner.incrementDespawnHeight();
             maxPlayerHeight = currY;
+        }
+        if (currY > GameSettings.playerScore)
+        {
+            GameSettings.playerScore = currY;
         }
     }
 
@@ -82,6 +87,9 @@ public class PlayerMovement : MonoBehaviour
                 restrictedMove3();
                 break;
         }
+        GameSettings.playerX = currX;
+        GameSettings.playerY = currY;
+        GameSettings.playerZ = currZ;
     }
     void restrictedMove0()
     {
