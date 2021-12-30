@@ -39,22 +39,6 @@ public class Block : MonoBehaviour
         clearObstruction();
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        bool hitBlock = collision.gameObject.tag == "Building Block";
-        float blockBottomY = this.transform.position.y - 1;
-        float collisionY = collision.GetContact(0).point.y;
-        bool landed = Mathf.Abs(collisionY - blockBottomY) < 0.2;
-
-        if (hitBlock && landed)
-        {
-            int x = (int)this.transform.position.x / blockSize;
-            int z = (int)this.transform.position.z / blockSize;
-            blockSpawner.grid[x, z]++;
-            blockSpawner.printGrid();
-        }
-    }
-
     public void spawn(int x, int z)
     {
         timeStartDespawn = 0;
@@ -72,7 +56,7 @@ public class Block : MonoBehaviour
         {
             return;
         }
-        int destinationHeight = blockSpawner.grid[currX, currZ];
+        int destinationHeight = blockSpawner.heightMap[currX, currZ];
         float worldDestHeight = blockSpawner.gridHeightToWorldHeight(destinationHeight);
         Vector3 currPos = transform.position;
 
@@ -86,8 +70,8 @@ public class Block : MonoBehaviour
             currY = destinationHeight;
             
             fallVelocity = 0;
-            int currTowerHeight = blockSpawner.grid[currX, currZ];
-            blockSpawner.grid[currX, currZ]++;
+            int currTowerHeight = blockSpawner.heightMap[currX, currZ];
+            blockSpawner.heightMap[currX, currZ]++;
             blockSpawner.setBlockMatrix(currTowerHeight, currX, currZ, this.gameObject);
         } else
         {
@@ -100,11 +84,13 @@ public class Block : MonoBehaviour
 
     public void mapDrop()
     {   
-        if (stable && amountMapDropped < blockSpawner.amountMapDropped)
+        if (amountMapDropped < blockSpawner.amountMapDropped)
         {
-            amountMapDropped++;
-            Vector3 newPos = transform.position - Vector3.up * blockSize;
+            int dropDifference = blockSpawner.amountMapDropped - amountMapDropped;
+            Vector3 newPos = transform.position - Vector3.up * GameSettings.blockSize * dropDifference;
             rb.MovePosition(newPos);
+            amountMapDropped = blockSpawner.amountMapDropped;
+            currY -= dropDifference;
         }
     }
 

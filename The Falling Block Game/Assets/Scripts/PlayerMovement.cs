@@ -17,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
     BlockSpawner blockSpawner;
     FixedThirdPersonCam gameCam;
     private int amountMapDropped = 0;
-    public int maxPlayerHeight = 5;
 
     private void Start()
     {
@@ -35,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currY = blockSpawner.grid[currX, currZ];
+        currY = blockSpawner.heightMap[currX, currZ];
         restrictedMove();
         mapDrop();
         checkHeightIncrease();
@@ -43,15 +42,15 @@ public class PlayerMovement : MonoBehaviour
 
     void checkHeightIncrease()
     {
-        if (currY > maxPlayerHeight)
+        int relativeMaxHeight = GameSettings.playerScore - blockSpawner.amountMapDropped;
+        if (currY > relativeMaxHeight)
         {
-            Debug.Log("max height: " + maxPlayerHeight);
-            blockSpawner.incrementDespawnHeight();
-            maxPlayerHeight = currY;
-        }
-        if (currY > GameSettings.playerScore)
-        {
-            GameSettings.playerScore = currY;
+            int heightIncrease = currY - relativeMaxHeight;
+            if (GameSettings.playerScore > 3)
+            {
+                blockSpawner.shiftMapUp(heightIncrease);
+            }
+            GameSettings.playerScore += heightIncrease;
         }
     }
 
@@ -59,12 +58,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (amountMapDropped < blockSpawner.amountMapDropped)
         {
-            if (transform.position.y > 1.01)
-            {
-                Vector3 newPos = transform.position - Vector3.up * GameSettings.blockSize;
-                rb.MovePosition(newPos);
-            }
-            amountMapDropped++;
+            int dropDifference = blockSpawner.amountMapDropped - amountMapDropped;
+            Vector3 newPos = transform.position - Vector3.up * GameSettings.blockSize * dropDifference;
+            rb.MovePosition(newPos);
+            amountMapDropped = blockSpawner.amountMapDropped;
+            currY -= dropDifference;
         }
     }
     void restrictedMove()
@@ -171,7 +169,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (currZ + 1 < blockSpawner.gridZ)
         {
-            int targetHeight = blockSpawner.grid[currX, currZ + 1];
+            int targetHeight = blockSpawner.heightMap[currX, currZ + 1];
             if (targetHeight <= currY + 1)
             {
                 currZ++;
@@ -183,7 +181,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (currZ - 1 >= 0)
         {
-            int targetHeight = blockSpawner.grid[currX, currZ - 1];
+            int targetHeight = blockSpawner.heightMap[currX, currZ - 1];
             if (targetHeight <= currY + 1)
             {
                 currZ--;
@@ -195,7 +193,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (currX + 1 < blockSpawner.gridX)
         {
-            int targetHeight = blockSpawner.grid[currX + 1, currZ];
+            int targetHeight = blockSpawner.heightMap[currX + 1, currZ];
             if (targetHeight <= currY + 1)
             {
                 currX++;
@@ -207,7 +205,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (currX - 1 >= 0)
         {
-            int targetHeight = blockSpawner.grid[currX - 1, currZ];
+            int targetHeight = blockSpawner.heightMap[currX - 1, currZ];
             if (targetHeight <= currY + 1)
             {
                 currX--;

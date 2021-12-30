@@ -13,10 +13,9 @@ public class BlockSpawner : MonoBehaviour
 
     ObjectPooler objectPooler;
     private float prevSpawn;
-    private float prevMapDropReset;
     public int amountMapDropped = 0;
     private float blockSize;
-    public int[,] grid;
+    public int[,] heightMap;
     public GameObject[,,] blockMatrix;
     public int matrixFloor;
     public float despawnHeight;
@@ -33,14 +32,13 @@ public class BlockSpawner : MonoBehaviour
     {
         objectPooler = ObjectPooler.Instance;
         prevSpawn = Time.fixedTime;
-        prevMapDropReset = Time.fixedTime;
         blockSize = GameSettings.blockSize;
-        grid = new int[gridX, gridZ];
+        heightMap = new int[gridX, gridZ];
         for (int i = 0; i < gridX; i++)
         {
             for (int j = 0; j < gridZ; j++)
             {
-                grid[i, j] = 0;
+                heightMap[i, j] = 0;
             }
         }
         blockMatrix = new GameObject[gridY, gridX, gridZ];
@@ -107,7 +105,6 @@ public class BlockSpawner : MonoBehaviour
 
     public int getBlockMatrixY(int y)
     {
-        Debug.Log("rawY: " + y + " processedY: " + ((y + (gridY) - matrixFloor) % gridY) + " matrix floor: " + matrixFloor);
         return (y + (gridY) - matrixFloor) % gridY;
     }
 
@@ -119,22 +116,22 @@ public class BlockSpawner : MonoBehaviour
             debugMessage += "[";
             for (int j = 0; j < gridZ - 1; j++)
             {
-                debugMessage += grid[i, j] + ", ";
+                debugMessage += heightMap[i, j] + ", ";
             }
-            debugMessage += grid[i, gridZ - 1] + "]\n";
+            debugMessage += heightMap[i, gridZ - 1] + "]\n";
         }
         Debug.Log(debugMessage);
     }
 
-    public void removeGridLayer()
+    public void removeGridLayers(int amount)
     {
         for (int i = 0; i < gridX; i++)
         {
             for (int j = 0; j < gridZ; j++)
             {
-                if (grid[i, j] != 0)
+                if (heightMap[i, j] != 0)
                 {
-                    grid[i, j]--;
+                    heightMap[i, j] -= amount;
                 }
             }
         }
@@ -152,30 +149,47 @@ public class BlockSpawner : MonoBehaviour
         return blockSize / 2.0f + gridHeight * blockSize;
     }
 
-    public void incrementDespawnHeight()
+    public void shiftMapUp(int amount)
     {
-        Debug.Log(matrixFloor);
-        if (matrixFloor < gridY - 1)
+        if (matrixFloor < gridY - amount)
         {
-            matrixFloor += 1;
+            matrixFloor += amount;
         }
         else
         {
-            matrixFloor = 0;
+            matrixFloor = (matrixFloor + amount) % gridY;
         }
-        despawnHeight += blockSize;
-        spawnHeight += blockSize;
+        despawnHeight += blockSize * amount;
+        spawnHeight += blockSize * amount;
     }
 
     private void updateMapDrop()
     {
-        float dTime = Time.fixedTime - prevMapDropReset;
-        if (dTime >= GameSettings.mapDropPeriod)
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            amountMapDropped++;
-            prevMapDropReset = Time.fixedTime;
-            removeGridLayer();
+            int minHeight = minHeightMap();
+            int dropSize = (minHeight >= 3)? (minHeight - 3): minHeight;
+            amountMapDropped += dropSize;
+            removeGridLayers(dropSize);
+            spawnHeight -= dropSize;
+            despawnHeight -= dropSize * blockSize;
         }
+    }
+
+    private int minHeightMap()
+    {
+        int min = heightMap[0, 0];
+        for (int i = 0; i < gridX; i++)
+        {
+            for (int j = 0; j < gridZ; j++)
+            {
+                if (heightMap[i, j] < min)
+                {
+                    min = heightMap[i, j];
+                }
+            }
+        }
+        return min;
     }
 
     private IEnumerator spawnLineZ(int positionZ, int direction, float timeBetweenSpawns)
