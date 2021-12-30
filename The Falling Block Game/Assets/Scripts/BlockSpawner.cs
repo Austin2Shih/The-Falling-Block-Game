@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BlockSpawner : MonoBehaviour
 {
+    public GameObject spawnLocationPrefab;
     public float spawnDelay;
     public float spawnHeight;
     public int gridX;
@@ -19,6 +20,8 @@ public class BlockSpawner : MonoBehaviour
     public GameObject[,,] blockMatrix;
     public int matrixFloor;
     public float despawnHeight;
+
+    private GameObject[,] spawners;
 
 
     public static BlockSpawner Instance;
@@ -54,16 +57,27 @@ public class BlockSpawner : MonoBehaviour
         }
         matrixFloor = 0;
         despawnHeight = gridHeightToWorldHeight(-1);
+        spawners = new GameObject[gridX, gridZ];
+        for (int i = 0; i < gridX; i++)
+        {
+            for (int j = 0; j < gridZ; j++)
+            {
+                spawners[i, j] = Instantiate(spawnLocationPrefab);
+                spawners[i, j].GetComponent<SpawnLocation>().setPos(i, j);
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         float timeForFrame = Time.fixedTime;
+
         if ((timeForFrame >= prevSpawn + spawnDelay))
         {
             prevSpawn = timeForFrame;
-            StartCoroutine(spawnGridFromLinesZ(1, 1, 0.5f, 0.5f));
+            //StartCoroutine(spawnGridFromLinesZ(-1, 1, 1f, 1f));
+            StartCoroutine(spawnRandomOnTimer(10, 3, 0.5f));
         }
 
         updateMapDrop();
@@ -75,7 +89,7 @@ public class BlockSpawner : MonoBehaviour
         spawnLocation += new Vector3(blockSize / 2, 0, blockSize / 2);
         GameObject spawnedBlock = objectPooler.SpawnFromPool("Block", spawnLocation, Quaternion.identity);
 
-        spawnedBlock.GetComponent<Block>().spawn(x, z);
+        spawners[x, z].GetComponent<SpawnLocation>().spawn(spawnedBlock);
     }
 
     void spawnRandom()
@@ -230,6 +244,19 @@ public class BlockSpawner : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenLines);
             }
         }
+    }
+
+    private IEnumerator spawnRandomOnTimer(int spawnCount, int blocksPerSpawn, float timeBetweenSpawns)
+    {
+        for (int i = 0; i < spawnCount; i++)
+        {
+            for (int j = 0; j < blocksPerSpawn; j++)
+            {
+                spawnRandom();
+            }
+            yield return new WaitForSeconds(timeBetweenSpawns);
+        }
+        
     }
 
 

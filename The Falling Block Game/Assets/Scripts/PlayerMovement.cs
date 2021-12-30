@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         currY = blockSpawner.heightMap[currX, currZ];
-        restrictedMove();
+        restrictedMove(1);
         mapDrop();
         checkHeightIncrease();
     }
@@ -65,148 +65,148 @@ public class PlayerMovement : MonoBehaviour
             currY -= dropDifference;
         }
     }
-    void restrictedMove()
+    void restrictedMove(int jumpHeight)
     {
         switch(gameCam.currPos) 
         {
             case 0:
-                restrictedMove0();
+                restrictedMove0(jumpHeight);
                 break;
 
             case 1:
-                restrictedMove1();
+                restrictedMove1(jumpHeight);
                 break;
 
             case 2:
-                restrictedMove2();
+                restrictedMove2(jumpHeight);
                 break;
 
             case 3:
-                restrictedMove3();
+                restrictedMove3(jumpHeight);
                 break;
         }
         GameSettings.playerX = currX;
         GameSettings.playerY = currY;
         GameSettings.playerZ = currZ;
     }
-    void restrictedMove0()
+    void restrictedMove0(int jumpHeight)
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            addZ();
+            addZ(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            subZ();
+            subZ(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            addX();
+            addX(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            subX();
+            subX(jumpHeight);
         }
     }
-    void restrictedMove1()
+    void restrictedMove1(int jumpHeight)
     {
         if (Input.GetKeyDown(KeyCode.D))
         {
-            addZ();
+            addZ(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            subZ();
+            subZ(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            addX();
+            addX(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            subX();
+            subX(jumpHeight);
         }
     }
-    void restrictedMove2()
+    void restrictedMove2(int jumpHeight)
     {
         if (Input.GetKeyDown(KeyCode.S))
         {
-            addZ();
+            addZ(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            subZ();
+            subZ(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            addX();
+            addX(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            subX();
+            subX(jumpHeight);
         }
     }
-    void restrictedMove3()
+    void restrictedMove3(int jumpHeight)
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            addZ();
+            addZ(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            subZ();
+            subZ(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            addX();
+            addX(jumpHeight);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            subX();
+            subX(jumpHeight);
         }
     }
-    void addZ()
+    void addZ(int jumpHeight)
     {
         if (currZ + 1 < blockSpawner.gridZ)
         {
             int targetHeight = blockSpawner.heightMap[currX, currZ + 1];
-            if (targetHeight <= currY + 1)
+            if (targetHeight <= currY + jumpHeight)
             {
                 currZ++;
                 rb.MovePosition(blockSpawner.gridToCoords(currX, targetHeight, currZ));
             }
         }
     }
-    void subZ()
+    void subZ(int jumpHeight)
     {
         if (currZ - 1 >= 0)
         {
             int targetHeight = blockSpawner.heightMap[currX, currZ - 1];
-            if (targetHeight <= currY + 1)
+            if (targetHeight <= currY + jumpHeight)
             {
                 currZ--;
                 rb.MovePosition(blockSpawner.gridToCoords(currX, targetHeight, currZ));
             }
         }
     }
-    void addX()
+    void addX(int jumpHeight)
     {
         if (currX + 1 < blockSpawner.gridX)
         {
             int targetHeight = blockSpawner.heightMap[currX + 1, currZ];
-            if (targetHeight <= currY + 1)
+            if (targetHeight <= currY + jumpHeight)
             {
                 currX++;
                 rb.MovePosition(blockSpawner.gridToCoords(currX, targetHeight, currZ));
             }
         }
     }
-    void subX()
+    void subX(int jumpHeight)
     {
         if (currX - 1 >= 0)
         {
             int targetHeight = blockSpawner.heightMap[currX - 1, currZ];
-            if (targetHeight <= currY + 1)
+            if (targetHeight <= currY + jumpHeight)
             {
                 currX--;
                 rb.MovePosition(blockSpawner.gridToCoords(currX, targetHeight, currZ));
