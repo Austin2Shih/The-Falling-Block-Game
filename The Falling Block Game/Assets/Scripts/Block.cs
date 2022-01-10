@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// block
 public class Block : MonoBehaviour
 {
     public float fallAccel = -9.8f;
