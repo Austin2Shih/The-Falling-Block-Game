@@ -33,6 +33,7 @@ public class ObjectPooler : MonoBehaviour
             for (int i = 0; i < pool.size; i++)
             {
                 GameObject obj = Instantiate(pool.prefab);
+                obj.name = pool.tag + " " + i;
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }

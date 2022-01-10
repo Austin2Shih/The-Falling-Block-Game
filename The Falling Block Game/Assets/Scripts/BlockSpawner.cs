@@ -11,6 +11,7 @@ public class BlockSpawner : MonoBehaviour
     public int gridX;
     public int gridY;
     public int gridZ;
+    public int maxGap;
 
     ObjectPooler objectPooler;
     private float prevSpawn;
@@ -77,13 +78,13 @@ public class BlockSpawner : MonoBehaviour
         {
             prevSpawn = timeForFrame;
             //StartCoroutine(spawnGridFromLinesZ(-1, 1, 1f, 1f));
-            StartCoroutine(spawnRandomOnTimer(10, 3, 0.5f));
+            StartCoroutine(spawnRandomOnTimer(50, 1, 1f));
         }
-
+            
         updateMapDrop();
     }
 
-    void spawnBlock(int x, int z)
+    public void spawnBlock(int x, int z)
     {
         Vector3 spawnLocation = new Vector3(x, spawnHeight, z) * blockSize;
         spawnLocation += new Vector3(blockSize / 2, 0, blockSize / 2);
@@ -190,7 +191,7 @@ public class BlockSpawner : MonoBehaviour
         }
     }
 
-    private int minHeightMap()
+    public int minHeightMap()
     {
         int min = heightMap[0, 0];
         for (int i = 0; i < gridX; i++)
@@ -204,6 +205,22 @@ public class BlockSpawner : MonoBehaviour
             }
         }
         return min;
+    }
+
+    public int maxHeightMap()
+    {
+        int max = heightMap[0, 0];
+        for (int i = 0; i < gridX; i++)
+        {
+            for (int j = 0; j < gridZ; j++)
+            {
+                if (heightMap[i, j] > max)
+                {
+                    max = heightMap[i, j];
+                }
+            }
+        }
+        return max;
     }
 
     private IEnumerator spawnLineZ(int positionZ, int direction, float timeBetweenSpawns)
@@ -258,6 +275,5 @@ public class BlockSpawner : MonoBehaviour
         }
         
     }
-
 
 }

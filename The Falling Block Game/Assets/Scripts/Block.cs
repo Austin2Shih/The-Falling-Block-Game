@@ -28,7 +28,9 @@ public class Block : MonoBehaviour
         blockSpawner = BlockSpawner.Instance;
         rb = this.GetComponent<Rigidbody>();
         blockSize = GameSettings.blockSize;
-        
+        stable = true;
+        fallVelocity = 0;
+
     }
 
     private void FixedUpdate()
@@ -73,6 +75,7 @@ public class Block : MonoBehaviour
             int currTowerHeight = blockSpawner.heightMap[currX, currZ];
             blockSpawner.heightMap[currX, currZ]++;
             blockSpawner.setBlockMatrix(currTowerHeight, currX, currZ, this.gameObject);
+            Debug.Log(currX + ", " + currZ + this.gameObject.name);
         } else
         {
             float timeFallen = Time.fixedTime - timeStartFall;
