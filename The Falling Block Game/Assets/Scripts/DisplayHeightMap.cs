@@ -24,9 +24,9 @@ public class DisplayHeightMap : MonoBehaviour
     public void displayGrid()
     {
         string debugMessage = "";
-        for (int i = 0; i < blockSpawner.gridX; i++)
+        for (int i = 0; i < GameSettings.gridX; i++)
         {
-            for (int j = 0; j < blockSpawner.gridZ; j++)
+            for (int j = 0; j < GameSettings.gridZ; j++)
             {
                 debugMessage += blockSpawner.heightMap[i, j] + "  ";
             }

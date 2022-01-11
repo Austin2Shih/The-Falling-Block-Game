@@ -491,7 +491,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.7
+  m_Intensity: 0.9
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -793,7 +793,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.7
+  m_Intensity: 0.9
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -973,11 +973,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnLocationPrefab: {fileID: 7956287555935506185, guid: 3b631316079bf7d4fb185d9250fba9c3, type: 3}
-  spawnDelay: 5
+  spawnDelay: 10
   spawnHeight: 20
-  gridX: 7
   gridY: 11
-  gridZ: 7
   maxGap: 2
   amountMapDropped: 0
   matrixFloor: 0

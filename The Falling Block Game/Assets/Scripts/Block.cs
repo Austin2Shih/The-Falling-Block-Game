@@ -76,7 +76,6 @@ public class Block : MonoBehaviour
             int currTowerHeight = blockSpawner.heightMap[currX, currZ];
             blockSpawner.heightMap[currX, currZ]++;
             blockSpawner.setBlockMatrix(currTowerHeight, currX, currZ, this.gameObject);
-            Debug.Log(currX + ", " + currZ + this.gameObject.name);
         } else
         {
             float timeFallen = Time.fixedTime - timeStartFall;
