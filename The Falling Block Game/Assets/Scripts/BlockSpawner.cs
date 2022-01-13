@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Linq;
 
 public class BlockSpawner : MonoBehaviour
 {
     public GameObject spawnLocationPrefab;
     public float spawnDelay;
     public float spawnHeight;
-    public int gridX;
+    private int gridX;
     public int gridY;
-    public int gridZ;
+    private int gridZ;
+    public int maxGap;
 
     ObjectPooler objectPooler;
     private float prevSpawn;
@@ -33,6 +35,8 @@ public class BlockSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gridX = GameSettings.gridX;
+        gridZ = GameSettings.gridZ;
         objectPooler = ObjectPooler.Instance;
         prevSpawn = Time.fixedTime;
         blockSize = GameSettings.blockSize;
@@ -77,18 +81,20 @@ public class BlockSpawner : MonoBehaviour
         {
             prevSpawn = timeForFrame;
             //StartCoroutine(spawnGridFromLinesZ(-1, 1, 1f, 1f));
-            StartCoroutine(spawnRandomOnTimer(10, 3, 0.5f));
+            //StartCoroutine(spawnRandomOnTimer(50, 1, 1f));
+            StartCoroutine(spawnLayerRandom(1, 0.2f));
         }
-
+        checkHeightIncrease();
         updateMapDrop();
     }
 
-    void spawnBlock(int x, int z)
+    public void spawnBlock(int x, int z)
     {
         Vector3 spawnLocation = new Vector3(x, spawnHeight, z) * blockSize;
         spawnLocation += new Vector3(blockSize / 2, 0, blockSize / 2);
         GameObject spawnedBlock = objectPooler.SpawnFromPool("Block", spawnLocation, Quaternion.identity);
 
+        Debug.Log("GOT TO SPAWNBLOCK for " + x + ", " + z);
         spawners[x, z].GetComponent<SpawnLocation>().spawn(spawnedBlock);
     }
 
@@ -103,6 +109,20 @@ public class BlockSpawner : MonoBehaviour
     {
         block.SetActive(false);
         objectPooler.poolDict["Block"].Enqueue(block);
+    }
+
+    void checkHeightIncrease()
+    {
+        int relativeMaxHeight = GameSettings.maxTowerHeight - amountMapDropped;
+        if (maxHeightMap() > relativeMaxHeight)
+        {
+            int heightIncrease = maxHeightMap() - relativeMaxHeight;
+            if (GameSettings.playerScore > GameSettings.towerHeightRange)
+            {
+                shiftMapUp(heightIncrease);
+            }
+            GameSettings.maxTowerHeight = maxHeightMap();
+        }
     }
 
     public void setBlockMatrix(int y, int x, int z, GameObject block)
@@ -190,7 +210,7 @@ public class BlockSpawner : MonoBehaviour
         }
     }
 
-    private int minHeightMap()
+    public int minHeightMap()
     {
         int min = heightMap[0, 0];
         for (int i = 0; i < gridX; i++)
@@ -204,6 +224,22 @@ public class BlockSpawner : MonoBehaviour
             }
         }
         return min;
+    }
+
+    public int maxHeightMap()
+    {
+        int max = heightMap[0, 0];
+        for (int i = 0; i < gridX; i++)
+        {
+            for (int j = 0; j < gridZ; j++)
+            {
+                if (heightMap[i, j] > max)
+                {
+                    max = heightMap[i, j];
+                }
+            }
+        }
+        return max;
     }
 
     private IEnumerator spawnLineZ(int positionZ, int direction, float timeBetweenSpawns)
@@ -259,5 +295,34 @@ public class BlockSpawner : MonoBehaviour
         
     }
 
+    private IEnumerator spawnLayerRandom(int blocksPerSpawn, float timeBetweenSpawns)
+    {
+        int gridPosX, gridPosZ;
+
+        int[] gridPos = new int[gridX * gridZ];
+        for (int i = 0; i < gridX * gridZ; i++)
+        {
+            gridPos[i] = i;
+        }
+        gridPos = gridPos.OrderBy(x => Random.Range(0, gridX * gridZ - 1)).ToArray();
+
+        Debug.Log(string.Join(", ", gridPos));
+
+        for (int i = 0; i < gridX * gridZ; i += blocksPerSpawn) {
+            for (int j = 0; j < blocksPerSpawn; j++)
+            {
+                if (i + j < gridX * gridZ)
+                {
+                    gridPosX = gridPos[i + j] / gridX;
+                    gridPosZ = gridPos[i + j] % gridZ;
+                    Debug.Log(gridPosX + ", " + gridPosZ + ", i = " + gridPos[i+j]);
+                    spawnBlock(gridPosX, gridPosZ);
+                }
+            }
+            
+            yield return new WaitForSeconds(timeBetweenSpawns);
+        }
+        
+    }
 
 }

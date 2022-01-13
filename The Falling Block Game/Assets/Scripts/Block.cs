@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// block
 public class Block : MonoBehaviour
 {
     public float fallAccel = -9.8f;
@@ -28,7 +29,9 @@ public class Block : MonoBehaviour
         blockSpawner = BlockSpawner.Instance;
         rb = this.GetComponent<Rigidbody>();
         blockSize = GameSettings.blockSize;
-        
+        stable = true;
+        fallVelocity = 0;
+
     }
 
     private void FixedUpdate()

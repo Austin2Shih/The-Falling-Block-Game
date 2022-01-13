@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
         if (hitBlock && hitTopOfPlayer)
         {
-            Debug.Log("You Died");
+            //Debug.Log("You Died");
         }
     }
 }

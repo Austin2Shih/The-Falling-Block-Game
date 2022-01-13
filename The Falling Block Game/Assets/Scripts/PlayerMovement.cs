@@ -46,10 +46,6 @@ public class PlayerMovement : MonoBehaviour
         if (currY > relativeMaxHeight)
         {
             int heightIncrease = currY - relativeMaxHeight;
-            if (GameSettings.playerScore > 3)
-            {
-                blockSpawner.shiftMapUp(heightIncrease);
-            }
             GameSettings.playerScore += heightIncrease;
         }
     }
@@ -167,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void addZ(int jumpHeight)
     {
-        if (currZ + 1 < blockSpawner.gridZ)
+        if (currZ + 1 < GameSettings.gridZ)
         {
             int targetHeight = blockSpawner.heightMap[currX, currZ + 1];
             if (targetHeight <= currY + jumpHeight)
@@ -191,7 +187,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void addX(int jumpHeight)
     {
-        if (currX + 1 < blockSpawner.gridX)
+        if (currX + 1 < GameSettings.gridX)
         {
             int targetHeight = blockSpawner.heightMap[currX + 1, currZ];
             if (targetHeight <= currY + jumpHeight)
