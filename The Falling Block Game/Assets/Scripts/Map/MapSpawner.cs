@@ -6,7 +6,7 @@ using System.Linq;
 
 public class MapSpawner : MonoBehaviour
 {
-    public float spawnHeight;
+    public int spawnHeight;
     private int gridX;
     private int gridZ;
 
@@ -48,8 +48,7 @@ public class MapSpawner : MonoBehaviour
 
     public void spawnBlock(int x, int y, int z)
     {
-        Vector3 spawnLocation = new Vector3(x, y, z) * blockSize;
-        spawnLocation += new Vector3(blockSize / 2, blockSize/2, blockSize / 2);
+        Vector3 spawnLocation = gridToCoords(x, y, z);
         GameObject spawnedBlock = objectPooler.SpawnFromPool("Block", spawnLocation, Quaternion.identity);
         spawnedBlock.GetComponent<Block>().spawn(x, y, z);
     }
@@ -62,7 +61,7 @@ public class MapSpawner : MonoBehaviour
     public Vector3 gridToCoords(int x, int y, int z)
     {
         Vector3 outputVector = new Vector3(x, y, z) * blockSize;
-        outputVector += new Vector3(blockSize / 2.0f, blockSize / 4.0f, blockSize / 2.0f);
+        outputVector += new Vector3(blockSize / 2.0f, blockSize / 2.0f, blockSize / 2.0f);
         return outputVector;
     }
 }

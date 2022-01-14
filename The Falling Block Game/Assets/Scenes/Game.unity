@@ -264,7 +264,16 @@ MonoBehaviour:
   pools:
   - tag: Block
     prefab: {fileID: 6889523814151390195, guid: c474ed48ffb789141ac6b64ff57dd4c5, type: 3}
-    size: 100
+    size: 49
+  - tag: Bird
+    prefab: {fileID: 6116934595618623543, guid: e1cb13c916639174385a1c9040f32eb1, type: 3}
+    size: 20
+  - tag: Squirrel
+    prefab: {fileID: 3693847402124434016, guid: b9c71306489ded94c9246dedc97923d9, type: 3}
+    size: 49
+  - tag: Acorn
+    prefab: {fileID: 6223606659112304312, guid: d4293b3085ff76841acecf1d028a41c0, type: 3}
+    size: 80
 --- !u!1 &184982338
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,6 +457,51 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!1 &320830075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 320830076}
+  - component: {fileID: 320830077}
+  m_Layer: 0
+  m_Name: BirdSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &320830076
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320830075}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.15897274, y: 23.633265, z: 2.5804942}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1639817726}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &320830077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320830075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f45c9c7c5675b4385f92dd964b41a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnHeight: 0
+  spawnOffset: 4
 --- !u!1 &538493391
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +977,7 @@ GameObject:
   - component: {fileID: 1639817726}
   - component: {fileID: 1639817727}
   m_Layer: 0
-  m_Name: BlockSpawner
+  m_Name: MapSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -939,7 +993,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 320830076}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -955,7 +1010,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0293af32d70e5644a4fbcd55364a3a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnHeight: 20
+  spawnHeight: 0
 --- !u!1 &1780111020
 GameObject:
   m_ObjectHideFlags: 0

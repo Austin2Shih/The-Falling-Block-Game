@@ -10,7 +10,6 @@ public class Block : MonoBehaviour
     Rigidbody rb;
     int blockSize;
 
-    private float timeStartFall;
     private int x, y, z;
 
     MapSpawner mapSpawner;
