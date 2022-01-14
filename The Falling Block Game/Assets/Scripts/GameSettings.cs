@@ -7,8 +7,6 @@ public static class GameSettings
     public static int gridX = 7;
     public static int gridZ = 7;
     public static int blockSize = 2;
-    public static int towerHeightRange = 4; //Difference between top of tower and tower despawn height
-
 
     public static int camPos = 0;
     public static int playerX = 0;
@@ -16,5 +14,4 @@ public static class GameSettings
     public static int playerZ = 0;
 
     public static int playerScore = 0;
-    public static int maxTowerHeight = 0;
 }

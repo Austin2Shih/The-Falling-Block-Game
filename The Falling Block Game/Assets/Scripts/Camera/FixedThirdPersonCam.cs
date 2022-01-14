@@ -11,7 +11,7 @@ public class FixedThirdPersonCam : MonoBehaviour
     }
 
     PlayerMovement player;
-    BlockSpawner blockSpawner;
+    MapSpawner blockSpawner;
 
     public float offSet;
     public float camHeight;
@@ -20,14 +20,13 @@ public class FixedThirdPersonCam : MonoBehaviour
     float blockSize;
     public int currPos;
 
-    private int amountMapDropped = 0;
     private Vector3 prevPos;
 
     // Start is called before the first frame update
     void Start()
     {
         player = PlayerMovement.Instance;
-        blockSpawner = BlockSpawner.Instance;
+        blockSpawner = MapSpawner.Instance;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         gridX = GameSettings.gridX;
@@ -44,7 +43,6 @@ public class FixedThirdPersonCam : MonoBehaviour
     void Update()
     {
         updatePosition();
-        mapDrop();
     }
 
     void updatePosition()
@@ -66,8 +64,7 @@ public class FixedThirdPersonCam : MonoBehaviour
         }
         GameSettings.camPos = currPos;
 
-        Vector3 playerHeightShift = (Vector3.up * player.currY * GameSettings.blockSize);
-        transform.position = getCamPosition(currPos) + playerHeightShift;
+        transform.position = getCamPosition(currPos);
         transform.LookAt(player.transform.position);
     }
 
@@ -84,18 +81,6 @@ public class FixedThirdPersonCam : MonoBehaviour
                 return new Vector3(playerPos.x - blockSize * offSet, blockSize * camHeight, playerPos.z);
             default:
                 return new Vector3(playerPos.x, blockSize * camHeight, playerPos.z - blockSize * offSet);
-        }
-    }
-
-    public void mapDrop()
-    {
-        if (amountMapDropped < blockSpawner.amountMapDropped)
-        {
-            if (player.transform.position.y > 1.01)
-            {
-                transform.Translate(Vector3.up * -GameSettings.blockSize);
-            }
-            amountMapDropped++;
         }
     }
 
