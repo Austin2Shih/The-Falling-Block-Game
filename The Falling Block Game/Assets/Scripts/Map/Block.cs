@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    public float opaqueAlpha = 0.3f;
-    public float solidAlpha = 1.0f;
+    public float opaqueAlpha;
+    public float solidAlpha;
 
     Rigidbody rb;
     int blockSize;
@@ -13,13 +13,27 @@ public class Block : MonoBehaviour
     private float timeStartFall;
     private int x, y, z;
 
-
-    MapSpawner blockSpawner;
+    MapSpawner mapSpawner;
     void Start()
     {
-        blockSpawner = MapSpawner.Instance;
+        mapSpawner = MapSpawner.Instance;
         rb = this.GetComponent<Rigidbody>();
         blockSize = GameSettings.blockSize;
+    }
+
+    private void Update()
+    {
+        if ((x + z) % 2 == 0)
+        {
+            setOpaque();
+        }
+    }
+
+    public void spawn(int x, int y, int z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
     void ChangeAlpha(Material mat, float alphaVal)
     {

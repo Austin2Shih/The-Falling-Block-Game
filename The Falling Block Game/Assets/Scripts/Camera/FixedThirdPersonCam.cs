@@ -11,7 +11,7 @@ public class FixedThirdPersonCam : MonoBehaviour
     }
 
     PlayerMovement player;
-    MapSpawner blockSpawner;
+    MapSpawner mapSpawner;
 
     public float offSet;
     public float camHeight;
@@ -26,7 +26,7 @@ public class FixedThirdPersonCam : MonoBehaviour
     void Start()
     {
         player = PlayerMovement.Instance;
-        blockSpawner = MapSpawner.Instance;
+        mapSpawner = MapSpawner.Instance;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         gridX = GameSettings.gridX;

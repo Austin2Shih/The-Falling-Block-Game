@@ -372,8 +372,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 368314560bf95514a8a688449964ccc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offSet: 8
-  camHeight: 3
+  offSet: 5
+  camHeight: 13
   currPos: 0
 --- !u!114 &184982343
 MonoBehaviour:
@@ -669,9 +669,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2759f4840b91cba4ca3fba9b7507b6c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  x: 0
-  y: 0
-  z: 0
 --- !u!114 &768257765
 MonoBehaviour:
   m_ObjectHideFlags: 0

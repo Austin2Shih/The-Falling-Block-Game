@@ -10,24 +10,24 @@ public class PlayerMovement : MonoBehaviour
         Instance = this;
     }
 
-    public int x, y, z;
-    float moveDist;
+    private int x, y, z;
 
     Rigidbody rb;
-    MapSpawner blockSpawner;
+    MapSpawner mapSpawner;
     FixedThirdPersonCam gameCam;
 
     private void Start()
     {
         rb = this.GetComponent<Rigidbody>();
         rb.interpolation = RigidbodyInterpolation.Interpolate;
-        blockSpawner = MapSpawner.Instance;
+        mapSpawner = MapSpawner.Instance;
         gameCam = FixedThirdPersonCam.Instance;
-        moveDist = GameSettings.blockSize;
-        rb.MovePosition(new Vector3(moveDist / 2.0f, moveDist / 4.0f, moveDist / 2.0f));
-        x = 0;
+        x = GameSettings.gridX / 2;
         y = 0;
-        z = 0;
+        z = GameSettings.gridZ / 2;
+        Vector3 outputVector = new Vector3(x, y, z) * GameSettings.blockSize;
+        outputVector += new Vector3(GameSettings.blockSize / 2.0f, GameSettings.blockSize / 4.0f, GameSettings.blockSize / 2.0f);
+        this.transform.position = outputVector;
     }
 
     // Update is called once per frame
@@ -141,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
         if (z + 1 < GameSettings.gridZ)
         {
             z += 1;
-            rb.MovePosition(blockSpawner.gridToCoords(x, y, z));
+            rb.MovePosition(mapSpawner.gridToCoords(x, y, z));
         }
     }
     void subZ()
@@ -149,7 +149,7 @@ public class PlayerMovement : MonoBehaviour
         if (z - 1 >= 0)
         {
             z -= 1;
-            rb.MovePosition(blockSpawner.gridToCoords(x, y, z));
+            rb.MovePosition(mapSpawner.gridToCoords(x, y, z));
         }
     }
     void addX()
@@ -157,7 +157,7 @@ public class PlayerMovement : MonoBehaviour
         if (x + 1 < GameSettings.gridX)
         {
             x += 1;
-            rb.MovePosition(blockSpawner.gridToCoords(x, y, z));
+            rb.MovePosition(mapSpawner.gridToCoords(x, y, z));
         }
     }
     void subX()
@@ -165,7 +165,7 @@ public class PlayerMovement : MonoBehaviour
         if (x - 1 >= 0)
         {
             x -= 1;
-            rb.MovePosition(blockSpawner.gridToCoords(x, y, z));
+            rb.MovePosition(mapSpawner.gridToCoords(x, y, z));
         }
     }
 

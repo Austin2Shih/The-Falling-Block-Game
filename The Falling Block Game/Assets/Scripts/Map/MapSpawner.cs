@@ -51,6 +51,7 @@ public class MapSpawner : MonoBehaviour
         Vector3 spawnLocation = new Vector3(x, y, z) * blockSize;
         spawnLocation += new Vector3(blockSize / 2, blockSize/2, blockSize / 2);
         GameObject spawnedBlock = objectPooler.SpawnFromPool("Block", spawnLocation, Quaternion.identity);
+        spawnedBlock.GetComponent<Block>().spawn(x, y, z);
     }
 
     public void despawnBlock(GameObject block)
