@@ -55,6 +55,8 @@ public class ObjectPooler : MonoBehaviour
         
         objectToSpawn.transform.position = pos;
 
+        
+
         return objectToSpawn;
     }
 

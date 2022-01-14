@@ -5,7 +5,7 @@ using UnityEngine;
 public class Acorn : MonoBehaviour
 {
 
-    private int despawnDistance;
+    public int despawnDistance;
     private Vector3 acornVelocity;
     EnemySpawner enemySpawner;
     Rigidbody rb;
@@ -19,7 +19,7 @@ public class Acorn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        checkDespawn();
     }
 
     public void initAcorn(Vector3 acornVelocity)

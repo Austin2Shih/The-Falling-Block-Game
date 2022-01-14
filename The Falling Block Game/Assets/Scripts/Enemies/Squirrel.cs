@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Squirrel : MonoBehaviour
 {
+
     public float acornCooldown;
     public float acornSpeed;
     private Vector3 acornVelocity;
@@ -18,9 +19,11 @@ public class Squirrel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        objectPooler = ObjectPooler.Instance;
         enemySpawner = EnemySpawner.Instance;
+        objectPooler = ObjectPooler.Instance;
         rb = this.GetComponent<Rigidbody>();
+        prevAcornToss = 0;//-acornCooldown;
+        
     }
 
     // Update is called once per frame
@@ -32,7 +35,7 @@ public class Squirrel : MonoBehaviour
 
     public void spawn(char coordLine, int moveDirection)
     {
-        prepareAcorn();
+        
         float xVel = 0;
         float zVel = 0;
         if (coordLine == 'x')
@@ -44,6 +47,13 @@ public class Squirrel : MonoBehaviour
             zVel = moveDirection * acornSpeed;
         }
         acornVelocity = new Vector3(xVel, 0, zVel);
+        prepareAcorn();
+    }
+    
+    private void despawnSquirrel()
+    {
+        enemySpawner.despawnEnemy(this.gameObject, "Squirrel");
+        enemySpawner.despawnEnemy(currAcorn, "Acorn");
     }
 
     private void checkDespawn()
@@ -51,7 +61,7 @@ public class Squirrel : MonoBehaviour
         float currY = transform.position.y;
         if (currY < (despawnHeight * GameSettings.blockSize))
         {
-            enemySpawner.despawnEnemy(this.gameObject, "Squirrel");
+            despawnSquirrel();
         }
     }
 
@@ -59,7 +69,6 @@ public class Squirrel : MonoBehaviour
     {
         if (Time.fixedTime - prevAcornToss >= acornCooldown)
         {
-            Debug.Log(currAcorn.name);
             tossAcorn();
             prepareAcorn();
             prevAcornToss = Time.fixedTime;
@@ -68,7 +77,8 @@ public class Squirrel : MonoBehaviour
 
     private void prepareAcorn()
     {
-        Vector3 spawnLocation = this.transform.position;
+        objectPooler = ObjectPooler.Instance;
+        Vector3 spawnLocation = this.transform.position + acornVelocity.normalized;
         GameObject spawnedAcorn = objectPooler.SpawnFromPool("Acorn", spawnLocation, Quaternion.identity);
         spawnedAcorn.GetComponent<Acorn>().initAcorn(acornVelocity);
         Debug.Log(spawnedAcorn.name);
@@ -85,7 +95,8 @@ public class Squirrel : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            enemySpawner.despawnEnemy(this.gameObject, "Squirrel");
+            despawnSquirrel();
         }
     }
+
 }
