@@ -12,6 +12,8 @@ public class Squirrel : MonoBehaviour
     GameObject currAcorn;
     private int despawnHeight = -10; //distance from platform that bird will despawn at
 
+    private int x, z;
+
     ObjectPooler objectPooler;
     EnemySpawner enemySpawner;
     Rigidbody rb;
@@ -33,9 +35,10 @@ public class Squirrel : MonoBehaviour
         checkDespawn();
     }
 
-    public void spawn(char coordLine, int moveDirection)
+    public void spawn(int x, int z, char coordLine, int moveDirection)
     {
-        
+        this.x = x;
+        this.z = z;
         float xVel = 0;
         float zVel = 0;
         if (coordLine == 'x')
@@ -81,7 +84,6 @@ public class Squirrel : MonoBehaviour
         Vector3 spawnLocation = this.transform.position + acornVelocity.normalized;
         GameObject spawnedAcorn = objectPooler.SpawnFromPool("Acorn", spawnLocation, Quaternion.identity);
         spawnedAcorn.GetComponent<Acorn>().initAcorn(acornVelocity);
-        Debug.Log(spawnedAcorn.name);
         currAcorn = spawnedAcorn;
     }
 

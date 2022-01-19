@@ -274,6 +274,12 @@ MonoBehaviour:
   - tag: Acorn
     prefab: {fileID: 6223606659112304312, guid: d4293b3085ff76841acecf1d028a41c0, type: 3}
     size: 80
+  - tag: Skunk
+    prefab: {fileID: 5115106098517206096, guid: 42e08588b062e5b45ad89d2a7481eacf, type: 3}
+    size: 49
+  - tag: Spray
+    prefab: {fileID: 7751451517788976041, guid: e6f775f6e1b6cf54d94faf48fa9de686, type: 3}
+    size: 80
 --- !u!1 &184982338
 GameObject:
   m_ObjectHideFlags: 0

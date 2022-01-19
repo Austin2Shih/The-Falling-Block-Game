@@ -32,6 +32,7 @@ public class EnemySpawner : MonoBehaviour
     {
         spawnRandomBird();
         spawnRandomSquirrel();
+        spawnRandomSkunk();
     }
 
     /*     (This is the bird's path from spawn) 
@@ -103,7 +104,14 @@ public class EnemySpawner : MonoBehaviour
     {
         Vector3 spawnLocation = gridToCoords(x, spawnHeight, z);
         GameObject spawnedSquirrel = objectPooler.SpawnFromPool("Squirrel", spawnLocation, Quaternion.identity);
-        spawnedSquirrel.GetComponent<Squirrel>().spawn(coordinateLine, firingDirection);
+        spawnedSquirrel.GetComponent<Squirrel>().spawn(x, z, coordinateLine, firingDirection);
+    }
+
+    public void spawnSkunk(int x, int z)
+    {
+        Vector3 spawnLocation = gridToCoords(x, spawnHeight, z);
+        GameObject spawnedSquirrel = objectPooler.SpawnFromPool("Skunk", spawnLocation, Quaternion.identity);
+        spawnedSquirrel.GetComponent<Skunk>().spawn(x, z);
     }
 
     public void despawnEnemy(GameObject enemy, string poolTag)
@@ -152,6 +160,16 @@ public class EnemySpawner : MonoBehaviour
             spawnX = Random.Range(0, GameSettings.gridX);
             spawnZ = Random.Range(0, GameSettings.gridZ);
             spawnSquirrel(spawnX, spawnZ, coordLine, moveDir);
+        }
+    }
+    private void spawnRandomSkunk()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            int spawnX, spawnZ;
+            spawnX = Random.Range(0, GameSettings.gridX);
+            spawnZ = Random.Range(0, GameSettings.gridZ);
+            spawnSkunk(spawnX, spawnZ);
         }
     }
 
